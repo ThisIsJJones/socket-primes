@@ -9,6 +9,7 @@ Bsock :
 
 clean : 
 	rm socket
+	rm Bsock
 	rm uwecSocket.o
 	rm uwecSocket.h.gch
 
