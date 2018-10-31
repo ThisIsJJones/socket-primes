@@ -6,7 +6,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include "uwecSocket.h"
-#include <netdb.h>
+ #include <netdb.h>
+#include <stdbool.h>
+
 
 int setupServerSocket(int port){ // Like new ServerSocket in Java
     // Get a socket of the right type
@@ -128,6 +130,32 @@ int readInt(int socket){ // Read an int from the given socket
         printf("ERROR reading from socket\n");
         exit(1);
     }
+    
+    return buffer;
+}
+
+
+void writeBoolArray(bool* prime, int socket, int arrayLength){
+	printf("writing bool\n");
+	int n = write(socket, &prime, sizeof(bool) * arrayLength);
+	if (n < 0){
+		printf("ERROR writing to socket\n");
+		exit(1);
+	}
+}
+
+bool* readBoolArray(int socket, int arrayLength){ // Read an bool from the given socket
+    	bool buffer[arrayLength];
+    	int n = read(socket, &buffer, sizeof(bool) * arrayLength);
+	printf("buffer in read\n");
+	for(int i = 0; i < n-1; i++){
+		printf("%d, ", buffer[i]);
+	}
+	printf("\n");
+	if (n < 0) {
+        	printf("ERROR reading from socket\n");
+        	exit(1);
+    	}
     
     return buffer;
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "uwecSocket.h"
+#include <string>
 using namespace std;
 
 
@@ -22,12 +23,29 @@ void Sieve(int n){
 	}
 }
 
-void calculateCurrentIndex(int index, bool prime[], int upperBound){
-	if(prime[index]){
-		for(int i=index*2; i<=upperBound; i += index){
-			prime[i] = false;
+bool calculateCurrentIndex(int* index, bool prime[], int upperBound){
+	//bumpedIndex is the actual value at that index position :)
+	int bumpedIndex = (*index)+2;
+	bool result = true;
+	bool keepGoing = true;
+	while(keepGoing){
+		if(bumpedIndex * bumpedIndex <= upperBound){	
+			if(prime[(*index)]){
+				for(int i=bumpedIndex * bumpedIndex; i<=upperBound; i += bumpedIndex){
+					prime[i-2] = false;
+				}
+				keepGoing = false;
+			}else{
+				//the current index is false (not a prime)
+				(*index)+=1;
+				bumpedIndex+=1;	
+			}
+		}else{
+			keepGoing = false;
+			result = false;
 		}
-	}	
+	}
+	return result;
 }
 
 int main(int argc, char** argv){
@@ -36,30 +54,39 @@ int main(int argc, char** argv){
 		return -1;
 	}
 
-	int serverSocket = setupServerSocket(11331);
+	int serverSocket = setupServerSocket(11332);
 	int socket = serverSocketAccept(serverSocket);
 
 	int n = stoi(argv[1]);
-	bool prime[n+1];
-	memset(prime, true, sizeof(prime));
-	
-	int index = 2;
+		
+	bool prime[n-1];
+	memset(prime, true, sizeof(bool) * (n-1));
+	int index = 0;
+	writeInt(n, socket);
 
-	calculateCurrentIndex(index, prime, n);	
+		for(int p=0; p<n-1; p++){
+			cout << prime[p] << " ";
+		}
 
+	writeBoolArray(prime, socket, n-1);
 
-	writeInt(5, socket);
+//	bool* primePointer = prime;	
+//	while( calculateCurrentIndex(&index, primePointer, n)){
+//		for(int p=0; p<n-1; p++){
+//			cout << prime[p] << " ";
+//		}
+//
+//		writeBoolArray(prime, socket, n-1);
+//		primePointer = readBoolArray(socket, n-1);
+//		index+=2;
+//	}	
 	
-	//send prime array to sieve B
-	index+=2;
-	calculateCurrentIndex(index, prime, n);	
-	
-	for(int p=2; p<=n; p++){
+	for(int p=0; p<n-1; p++){
 		if(prime[p]){	
-			cout << p << " ";
+			cout << p+2 << " ";
 		}
 	}
-	//Sieve(stoi(argv[1]));
+	
 	return 0;
 
 }
