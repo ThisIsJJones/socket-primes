@@ -1,6 +1,6 @@
 #include <iostream>
 #include "uwecSocket.h"
-#include <string>
+#include <string.h>
 using namespace std;
 
 
@@ -17,7 +17,7 @@ void Sieve(int n){
 	}
 
 	for(int p=2; p<=n; p++){
-		if(prime[p]){	
+		if(prime[p]){
 			cout << p << " ";
 		}
 	}
@@ -29,7 +29,7 @@ bool calculateCurrentIndex(int* index, bool prime[], int upperBound){
 	bool result = true;
 	bool keepGoing = true;
 	while(keepGoing){
-		if(bumpedIndex * bumpedIndex <= upperBound){	
+		if(bumpedIndex * bumpedIndex <= upperBound){
 			if(prime[(*index)]){
 				for(int i=bumpedIndex * bumpedIndex; i<=upperBound; i += bumpedIndex){
 					prime[i-2] = false;
@@ -38,7 +38,7 @@ bool calculateCurrentIndex(int* index, bool prime[], int upperBound){
 			}else{
 				//the current index is false (not a prime)
 				(*index)+=1;
-				bumpedIndex+=1;	
+				bumpedIndex+=1;
 			}
 		}else{
 			keepGoing = false;
@@ -58,7 +58,7 @@ int main(int argc, char** argv){
 	int socket = serverSocketAccept(serverSocket);
 
 	int n = stoi(argv[1]);
-		
+
 	bool prime[n-1];
 	memset(prime, true, sizeof(bool) * (n-1));
 	int index = 0;
@@ -70,7 +70,7 @@ int main(int argc, char** argv){
 
 	writeBoolArray(prime, socket, n-1);
 
-//	bool* primePointer = prime;	
+//	bool* primePointer = prime;
 //	while( calculateCurrentIndex(&index, primePointer, n)){
 //		for(int p=0; p<n-1; p++){
 //			cout << prime[p] << " ";
@@ -79,14 +79,14 @@ int main(int argc, char** argv){
 //		writeBoolArray(prime, socket, n-1);
 //		primePointer = readBoolArray(socket, n-1);
 //		index+=2;
-//	}	
-	
+//	}
+
 	for(int p=0; p<n-1; p++){
-		if(prime[p]){	
+		if(prime[p]){
 			cout << p+2 << " ";
 		}
 	}
-	
+
 	return 0;
 
 }

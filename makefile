@@ -1,17 +1,15 @@
-run : uwecSocket.o sieveA.o
-	g++ -o ./socket uwecSocket.o sieveA.o 
-
-sieveA.o : SieveA.cpp  
-	g++ -c SieveA.cpp
+run : uwecSocket.o SieveA.cpp
+	g++-7 -o ./socket uwecSocket.o SieveA.cpp
 
 uwecSocket.o : uwecSocket.h uwecSocket.c
-	g++ -c uwecSocket.h uwecSocket.c
+	g++ -c uwecSocket.h uwecSocket.c -o uwecSocket.o
 
+Bsock :
+	g++ uwecSocket.c SieveB.cpp -o Bsock
 
 clean : 
 	rm socket
 	rm uwecSocket.o
-	rm sieveA.o
 	rm uwecSocket.h.gch
 
 

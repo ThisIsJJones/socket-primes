@@ -33,7 +33,7 @@ bool calculateCurrentIndex(int* index, bool prime[], int upperBound){
 
 
 int main(){
-	
+
 	int socket = callServer("localhost", 11332);
 	int n = readInt(socket); //upper bound
 	cout << "Got upper bound: " << n << "\n";
@@ -43,7 +43,7 @@ int main(){
 	for(int i = 0; i<n-1; i++){
 		cout << prime[i] << ", ";
 	}
-	
+
 	int index = 1;
 	while( calculateCurrentIndex(&index, prime, n)){
                 writeBoolArray(prime, socket, n-1);
