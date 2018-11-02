@@ -115,7 +115,6 @@ int serverSocketAccept(int serverSocket){ // Like ss.accept() in Java
 }
 
 void writeInt(int x, int socket){ // Write an int over the given socket
-    printf("Here is the message: %d\n",x);
     int n = write(socket,&x,5);
     if (n < 0) {
         printf("ERROR writing to socket\n");
@@ -136,16 +135,10 @@ int readInt(int socket){ // Read an int from the given socket
 
 
 void writeBoolArray(bool* prime, int socket, int arrayLength){
-	printf("writing bool\n");
 	int n = write(socket, prime, sizeof(bool) * arrayLength);
 
-    printf("buffer in write\n");
-	for(int i = 0; i < n-1; i++){
-		printf("%d, ", prime[i]);
-	}
-	printf("\n");
 
-    if (n < 0){
+    	if (n < 0){
 		printf("ERROR writing to socket\n");
 		exit(1);
 	}
@@ -153,16 +146,21 @@ void writeBoolArray(bool* prime, int socket, int arrayLength){
 
 bool* readBoolArray(int socket, int arrayLength){ // Read an bool from the given socket
     	bool* buffer = (bool*)malloc(sizeof(bool)*arrayLength);
-    	int n = read(socket, &buffer, sizeof(bool) * arrayLength);
-	printf("buffer in read\n");
-	for(int i = 0; i < n-1; i++){
-		printf("%d, ", buffer[i]);
+    	
+	
+	int n = read(socket, buffer, sizeof(bool) * arrayLength);
+	int totalRead = n;
+		
+	while(totalRead != arrayLength){
+		n = read(socket, buffer+totalRead, (sizeof(bool)*(arrayLength))-totalRead);
+		totalRead += n;
+		
 	}
-	printf("\n");
+	
 	if (n < 0) {
         	printf("ERROR reading from socket\n");
         	exit(1);
-    	}
+    	}	
 
     return buffer;
 }
